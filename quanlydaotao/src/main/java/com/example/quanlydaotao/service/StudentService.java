@@ -2,6 +2,7 @@ package com.example.quanlydaotao.service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.Comparator;
 
 import org.springframework.stereotype.Service;
 
@@ -17,16 +18,18 @@ public class StudentService {
     }
 
     public List<Student> getAll() {
-        return studentRepository.findAll();
+        return studentRepository.findAll().stream().sorted(Comparator.comparingInt(this::extractNumber)).toList();
     }
 
     public List<Student> search(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
-            return studentRepository.findAll();
+            return studentRepository.findAll().stream().sorted(Comparator.comparingInt(this::extractNumber)).toList();
         }
         String value = keyword.trim();
-        return studentRepository.findByStudentCodeContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingIgnoreCase(
-                value, value, value, value);
+        return studentRepository
+                .findByStudentCodeContainingIgnoreCaseOrFullNameContainingIgnoreCaseOrEmailContainingIgnoreCaseOrPhoneContainingIgnoreCaseOrClassNameContainingIgnoreCase(
+                        value, value, value, value, value)
+                .stream().sorted(Comparator.comparingInt(this::extractNumber)).toList();
     }
 
     public Student getById(UUID id) {
@@ -41,5 +44,9 @@ public class StudentService {
     public void delete(UUID id) {
         studentRepository.deleteById(id);
     }
-}
 
+    // bỏ tiền tố SV
+    private int extractNumber(Student student) {
+        return Integer.parseInt(student.getStudentCode().replaceAll("[^0-9]", ""));
+    }
+}
