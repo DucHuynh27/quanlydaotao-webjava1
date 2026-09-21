@@ -1,4 +1,5 @@
 <!doctype html>
+
 <html xmlns:th="http://www.thymeleaf.org" lang="vi">
   <head>
     <meta charset="utf-8" />
@@ -6,8 +7,15 @@
     <!-- Google Font & Font Awesome -->
     <link
       rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap"
+    />
+    <link
+      rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
     />
+    <style>
+      body, * { font-family: 'Montserrat', sans-serif !important; }
+    </style>
     <!-- AdminLTE v3 CSS qua CDN -->
     <link
       rel="stylesheet"
@@ -115,19 +123,31 @@
                       <td th:text="${student.email}"></td>
                       <td th:text="${student.phone}"></td>
                       <td th:text="${student.className}"></td>
-                        <td class="text-center">
-                          <a
-                            th:href="@{'/students/edit/' + ${student.id}}"
-                            class="btn btn-sm btn-info"
+                      <td class="text-center">
+                        <a
+                          th:href="@{'/students/edit/' + ${student.id}}"
+                          class="btn btn-sm btn-info"
+                        >
+                          <i class="fas fa-edit"></i> Sửa
+                        </a>
+                        <form
+                          th:action="@{'/students/delete/' + ${student.id}}"
+                          method="post"
+                          style="display: inline"
+                        >
+                          <button
+                            type="submit"
+                            class="btn btn-sm btn-danger"
+                            onclick="
+                              return confirm(
+                                'Bạn có chắc chắn muốn xóa sinh viên này?',
+                              );
+                            "
                           >
-                            <i class="fas fa-edit"></i> Sửa
-                          </a>
-                          <form th:action="@{'/students/delete/' + ${student.id}}" method="post" style="display:inline;">
-                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc chắn muốn xóa sinh viên này?');">
-                              <i class="fas fa-trash"></i> Xóa
-                            </button>
-                          </form>
-                        </td>
+                            <i class="fas fa-trash"></i> Xóa
+                          </button>
+                        </form>
+                      </td>
                     </tr>
                     <tr th:if="${#lists.isEmpty(students)}">
                       <td colspan="6" class="text-center text-muted">
